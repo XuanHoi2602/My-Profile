@@ -570,146 +570,119 @@
     </div>
 
     <script>
-        /* 1. LOGIC ĐỒNG HỒ */
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours().toString().padStart(2, '0');
-            let minutes = now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('time').innerText = `${hours}:${minutes}`;
+document.addEventListener("DOMContentLoaded", function() {
+    /* 1. LOGIC ĐỒNG HỒ */
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours().toString().padStart(2, '0');
+        let minutes = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('time').innerText = `${hours}:${minutes}`;
 
-            const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-            document.getElementById('date').innerText = `${days[now.getDay()]} • ${months[now.getMonth()]} ${now.getDate()}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        document.getElementById('date').innerText = `${days[now.getDay()]} • ${months[now.getMonth()]} ${now.getDate()}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-        /* 2. LOGIC LẤY DATA DISCORD (LANYARD) */
-        const DISCORD_USER_ID = "756405530960068628";
-        async function fetchDiscordProfile() {
-            try {
-                const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
-                const { data, success } = await response.json();
-                if (success && data.discord_user.avatar) {
-                    document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${data.discord_user.avatar}.png?size=512`;
-                }
-
-                const customStatus = data.activities.find(activity => activity.type === 4);
-                const bubble = document.getElementById('discord-bubble');
-                if (customStatus && bubble) {
-                    let text = customStatus.state || "";
-                    bubble.innerHTML = text;
-                    bubble.style.display = 'flex';
-                } else if (bubble) {
-                    bubble.style.display = 'none';
-                }
-            } catch (error) { console.error("Lỗi Lanyard:", error); }
-        }
-        fetchDiscordProfile();
-        setInterval(fetchDiscordProfile, 5000);
-
-        /* 3. LOGIC HIỆU ỨNG GÕ CHỮ (TYPEWRITER) */
-        const phrases = ['Striving for success...', '成功を目指して努力する...', 'Trying to get better...', 'より良くしようとしている'];
-        let phraseIndex = 0, charIndex = 0, isDeleting = false;
-        const textElement = document.getElementById("typewriter-text");
-
-        function typeEffect() {
-            const currentPhrase = phrases[phraseIndex];
-            if (isDeleting) charIndex--; else charIndex++;
-            textElement.textContent = currentPhrase.substring(0, charIndex);
-            let typeSpeed = isDeleting ? 50 : 100;
-            if (!isDeleting && charIndex === currentPhrase.length) {
-                typeSpeed = 2000; isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500;
+    /* 2. LOGIC LẤY DATA DISCORD */
+    const DISCORD_USER_ID = "756405530960068628";
+    async function fetchDiscordProfile() {
+        try {
+            const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+            const { data, success } = await response.json();
+            if (success && data.discord_user.avatar) {
+                document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${data.discord_user.avatar}.png?size=512`;
             }
-            setTimeout(typeEffect, typeSpeed);
-        }
-        typeEffect();
+            const customStatus = data.activities.find(activity => activity.type === 4);
+            const bubble = document.getElementById('discord-bubble');
+            if (customStatus && bubble) {
+                bubble.innerHTML = customStatus.state || "";
+                bubble.style.display = 'flex';
+            } else if (bubble) { bubble.style.display = 'none'; }
+        } catch (error) { console.error("Lỗi Lanyard:", error); }
+    }
+    fetchDiscordProfile();
+    setInterval(fetchDiscordProfile, 5000);
 
-        /* 4. LOGIC NHẠC NỀN & PLAYLIST */
-        const audio = document.getElementById("bg-music");
-        const overlay = document.getElementById("click-to-play");
-        const songTitle = document.getElementById("song-title");
-        const currentTimeEl = document.getElementById("current-time");
-        const durationEl = document.getElementById("duration");
+    /* 3. LOGIC HIỆU ỨNG GÕ CHỮ */
+    const phrases = ['Striving for success...', '成功を目指して努力する...', 'Trying to get better...', 'より良くしようとしている'];
+    let phraseIndex = 0, charIndex = 0, isDeleting = false;
+    const textElement = document.getElementById("typewriter-text");
+    function typeEffect() {
+        const currentPhrase = phrases[phraseIndex];
+        textElement.textContent = currentPhrase.substring(0, charIndex);
+        if (isDeleting) charIndex--; else charIndex++;
+        let typeSpeed = isDeleting ? 50 : 100;
+        if (!isDeleting && charIndex === currentPhrase.length) { typeSpeed = 2000; isDeleting = true; }
+        else if (isDeleting && charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500; }
+        setTimeout(typeEffect, typeSpeed);
+    }
+    typeEffect();
 
-        const playlist = [
-            { title: "SƠN TÙNG M-TP | MUỘN RỒI MÀ SAO CÒN", file: "./assets/music/SƠN TÙNG M-TP - MUỘN RỒI MÀ SAO CÒN - OFFICIAL MUSIC VIDEO.mp3" },
-            { title: "SON TUNG M-TP | MAKING MY WAY", file: "./assets/music/SON TUNG M-TP - MAKING MY WAY - OFFICIAL VISUALIZER.mp3" },
-            { title: "SON TUNG M-TP x TYGA | COME MY WAY", file: "./assets/music/SON TUNG M-TP x TYGA - COME MY WAY - OFFICIAL MUSIC VIDEO.mp3" },
-            { title: "SƠN TÙNG M-TP | ĐỪNG LÀM TRÁI TIM ANH ĐAU", file: "./assets/music/SƠN TÙNG M-TP - ĐỪNG LÀM TRÁI TIM ANH ĐAU - OFFICIAL MUSIC VIDEO.mp3" }
-        ];
-        let currentSongIndex = 0;
+    /* 4. LOGIC NHẠC NỀN (ĐÃ FIX LỖI CLICK & TỰ CHUYỂN BÀI) */
+    const audio = document.getElementById("bg-music");
+    const overlay = document.getElementById("click-to-play");
+    const songTitle = document.getElementById("song-title");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+    const playPauseBtn = document.getElementById("play-pause-btn");
 
-        /* Cập nhật lại hàm loadSong để đồng bộ icon */
-function loadSong(index) {
-    audio.src = playlist[index].file;
-    songTitle.innerText = playlist[index].title;
-    audio.play();
-    // Đảm bảo icon luôn là nút Pause khi bài mới bắt đầu
-    document.getElementById("play-pause-btn").className = "fa-solid fa-pause";
-}
+    const playlist = [
+        { title: "SƠN TÙNG M-TP | MUỘN RỒI MÀ SAO CÒN", file: "./assets/music/SƠN TÙNG M-TP - MUỘN RỒI MÀ SAO CÒN - OFFICIAL MUSIC VIDEO.mp3" },
+        { title: "SON TUNG M-TP | MAKING MY WAY", file: "./assets/music/SON TUNG M-TP - MAKING MY WAY - OFFICIAL VISUALIZER.mp3" },
+        { title: "SON TUNG M-TP x TYGA | COME MY WAY", file: "./assets/music/SON TUNG M-TP x TYGA - COME MY WAY - OFFICIAL MUSIC VIDEO.mp3" },
+        { title: "SƠN TÙNG M-TP | ĐỪNG LÀM TRÁI TIM ANH ĐAU", file: "./assets/music/SƠN TÙNG M-TP - ĐỪNG LÀM TRÁI TIM ANH ĐAU - OFFICIAL MUSIC VIDEO.mp3" }
+    ];
+    let currentSongIndex = 0;
 
-/* Cập nhật lại sự kiện ended */
-audio.addEventListener("ended", () => {
-    nextSong(); // Sử dụng trực tiếp hàm nextSong() để thống nhất logic
+    window.loadSong = function(index) {
+        audio.src = playlist[index].file;
+        songTitle.innerText = playlist[index].title;
+        audio.play();
+        playPauseBtn.className = "fa-solid fa-pause";
+    };
+
+    window.nextSong = function() {
+        currentSongIndex = (currentSongIndex + 1) % playlist.length;
+        loadSong(currentSongIndex);
+    };
+
+    window.prevSong = function() {
+        currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+        loadSong(currentSongIndex);
+    };
+
+    window.togglePlayPause = function() {
+        if (audio.paused) { audio.play(); playPauseBtn.className = "fa-solid fa-pause"; }
+        else { audio.pause(); playPauseBtn.className = "fa-solid fa-play"; }
+    };
+
+    window.seekSong = function() {
+        const progressBar = document.getElementById("progress-bar");
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
+    };
+
+    overlay.addEventListener("click", () => {
+        audio.volume = 0.3;
+        loadSong(currentSongIndex);
+        overlay.style.display = "none";
+    });
+
+    audio.addEventListener("ended", nextSong);
+
+    audio.addEventListener("timeupdate", () => {
+        const progressBar = document.getElementById("progress-bar");
+        if (audio.duration) progressBar.value = (audio.currentTime / audio.duration) * 100;
+        const curMin = Math.floor(audio.currentTime / 60);
+        const curSec = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+        currentTimeEl.innerText = `${curMin}:${curSec}`;
+        const durMin = Math.floor(audio.duration / 60) || 0;
+        const durSec = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+        durationEl.innerText = `${durMin}:${durSec}`;
+    });
 });
-
-        audio.addEventListener("timeupdate", () => {
-            const curMin = Math.floor(audio.currentTime / 60);
-            const curSec = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
-            const durMin = Math.floor(audio.duration / 60) || 0;
-            const durSec = Math.floor(audio.duration % 60).toString().padStart(2, '0');
-            currentTimeEl.innerText = `${curMin}:${curSec}`;
-            durationEl.innerText = `${durMin}:${durSec}`;
-        });
-        // Hàm chuyển bài kế tiếp
-        function nextSong() {
-            currentSongIndex = (currentSongIndex + 1) % playlist.length;
-            loadSong(currentSongIndex);
-        }
-
-        // Hàm quay lại bài trước
-        function prevSong() {
-            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
-            loadSong(currentSongIndex);
-        }
-
-        // Hàm play/pause
-        function togglePlayPause() {
-            if (audio.paused) {
-                audio.play();
-                document.getElementById("play-pause-btn").className = "fa-solid fa-pause";
-            } else {
-                audio.pause();
-                document.getElementById("play-pause-btn").className = "fa-solid fa-play";
-            }
-        }
-
-        // Hàm tua bài (seek)
-        function seekSong() {
-            const progressBar = document.getElementById("progress-bar");
-            const seekTime = (progressBar.value / 100) * audio.duration;
-            audio.currentTime = seekTime;
-        }
-
-        // Cập nhật thanh tiến trình tự động
-        audio.addEventListener("timeupdate", () => {
-            const progressBar = document.getElementById("progress-bar");
-            // Cập nhật vị trí thanh tua
-            if (audio.duration) {
-                progressBar.value = (audio.currentTime / audio.duration) * 100;
-            }
-            // Cập nhật thời gian hiển thị (giữ nguyên logic cũ)
-            const curMin = Math.floor(audio.currentTime / 60);
-            const curSec = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
-            currentTimeEl.innerText = `${curMin}:${curSec}`;
-        });
-
-        // Cập nhật trạng thái nút Play/Pause khi nhạc bắt đầu
-        audio.onplay = () => document.getElementById("play-pause-btn").className = "fa-solid fa-pause";
-    </script>
+</script>
 </body>
 
 </html>
