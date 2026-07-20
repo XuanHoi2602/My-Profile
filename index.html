@@ -425,7 +425,7 @@
 
 <body>
     <!-- Nhạc nền -->
-    <audio id="bg-music" loop>
+    <audio id="bg-music">
         <source src="./assets/music.mp3" type="audio/mpeg">
     </audio>
 
@@ -609,7 +609,7 @@
         setInterval(fetchDiscordProfile, 5000);
 
         /* 3. LOGIC HIỆU ỨNG GÕ CHỮ (TYPEWRITER) */
-        const phrases = ['Striving for success...', '成功を目指して努力する...', 'Trying to get better...'];
+        const phrases = ['Striving for success...', '成功を目指して努力する...', 'Trying to get better...', 'より良くしようとしている'];
         let phraseIndex = 0, charIndex = 0, isDeleting = false;
         const textElement = document.getElementById("typewriter-text");
 
@@ -642,22 +642,19 @@
         ];
         let currentSongIndex = 0;
 
-        function loadSong(index) {
-            audio.src = playlist[index].file;
-            songTitle.innerText = playlist[index].title;
-            audio.play();
-        }
+        /* Cập nhật lại hàm loadSong để đồng bộ icon */
+function loadSong(index) {
+    audio.src = playlist[index].file;
+    songTitle.innerText = playlist[index].title;
+    audio.play();
+    // Đảm bảo icon luôn là nút Pause khi bài mới bắt đầu
+    document.getElementById("play-pause-btn").className = "fa-solid fa-pause";
+}
 
-        overlay.addEventListener("click", () => {
-            audio.volume = 0.3;
-            loadSong(currentSongIndex);
-            overlay.style.display = "none";
-        });
-
-        audio.addEventListener("ended", () => {
-            currentSongIndex = (currentSongIndex + 1) % playlist.length;
-            loadSong(currentSongIndex);
-        });
+/* Cập nhật lại sự kiện ended */
+audio.addEventListener("ended", () => {
+    nextSong(); // Sử dụng trực tiếp hàm nextSong() để thống nhất logic
+});
 
         audio.addEventListener("timeupdate", () => {
             const curMin = Math.floor(audio.currentTime / 60);
