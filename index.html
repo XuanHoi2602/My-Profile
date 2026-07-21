@@ -27,6 +27,7 @@
             padding: 20px;
             position: relative;
             overflow: auto;
+            perspective: 1000px; /* Tạo chiều sâu 3D cho hiệu ứng nghiêng */
         }
 
         /* --- VIDEO NỀN TỔNG QUÁT --- */
@@ -38,6 +39,7 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
+            pointer-events: none; 
         }
 
         /* ================= BỐ CỤC CHÍNH ================= */
@@ -52,24 +54,22 @@
             z-index: 1;
         }
 
+        /* Nền trong suốt thủy tinh và hiệu ứng ngả về sau khi hover viền */
         .glass-card {
-            background: rgba(17, 18, 20, 0.75);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 17, 21, 0.35); /* Tăng độ trong suốt dạng thủy tinh */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border 0.4s ease;
         }
 
         .glass-card:hover {
-            /* Phóng to widget lên 1.02 lần (tăng 2%) */
-            transform: scale(1.02);
-            /* Phát sáng viền bằng cách dùng box-shadow */
-            box-shadow: 0 0 15px rgba(0, 168, 252, 0.5), 0 10px 30px rgba(0, 0, 0, 0.7);
-            /* Làm sáng viền lên một chút */
-            border: 1px solid rgba(0, 168, 252, 0.5);
+            box-shadow: 0 0 20px rgba(47, 77, 73, 0.6), 0 5px 15px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(47, 77, 73, 0.856);
         }
 
         /* ================= CỘT TRÁI: DISCORD PROFILE ================= */
@@ -82,23 +82,21 @@
             padding: 0;
         }
 
-        /* --- SỬA LẠI KHỐI BANNER CHỨA MP4 --- */
         .banner {
             width: 100%;
             height: 120px;
             position: relative;
             overflow: hidden;
-            /* Cắt gọn video không cho tràn ra ngoài 120px */
         }
 
         .banner-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Ép video phủ kín khung banner */
             position: absolute;
             top: 0;
             left: 0;
+            pointer-events: none;
         }
 
         .card-body {
@@ -124,7 +122,8 @@
         }
 
         .status-bubble {
-            background-color: #2b2d31;
+            background-color: rgba(43, 45, 49, 0.6);
+            backdrop-filter: blur(5px);
             padding: 6px 12px;
             border-radius: 12px;
             border: 4px solid #111214;
@@ -201,12 +200,12 @@
         }
 
         .conn-icon:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(47, 77, 73, 0.856);
             color: #fff;
             transform: translateY(-2px);
         }
 
-        /* ================= CỘT PHẢI: WIDGETS DỌC ================= */
+        /* ================= CỘT PHẢI: WIDGETS NGANG ================= */
         .right-col {
             flex: 1.5;
             min-width: 320px;
@@ -301,12 +300,12 @@
 
         .skills-marquee-widget::before {
             left: 0;
-            background: linear-gradient(to right, rgba(17, 18, 20, 1), transparent);
+            background: linear-gradient(to right, rgba(15, 17, 21, 0.6), transparent);
         }
 
         .skills-marquee-widget::after {
             right: 0;
-            background: linear-gradient(to left, rgba(17, 18, 20, 1), transparent);
+            background: linear-gradient(to left, rgba(15, 17, 21, 0.6), transparent);
         }
 
         .marquee-track {
@@ -342,9 +341,7 @@
         .about-links {
             display: flex;
             flex-direction: column;
-            /* Xếp dọc các link để không bị dính vào nhau */
             gap: 10px;
-            /* Khoảng cách giữa các link */
             margin-top: 10px;
         }
 
@@ -352,30 +349,24 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            /* Khoảng cách giữa icon và chữ */
             color: #ffffff;
-            /* Màu trắng giúp chữ cực kỳ rõ */
             text-decoration: none;
             font-size: 0.95rem;
             padding: 8px 12px;
             background: rgba(255, 255, 255, 0.05);
-            /* Nền mờ nhẹ cho mỗi link */
             border-radius: 8px;
             transition: 0.3s;
         }
 
         .about-link:hover {
-            background: rgba(255, 255, 255, 0.15);
-            /* Sáng lên khi di chuột */
-            color: #00a8fc;
-            /* Đổi màu xanh nhẹ khi hover */
+            background: rgba(47, 77, 73, 0.856);
+            color: #fff;
         }
 
         .music-widget {
             padding: 15px;
             display: flex;
             flex-direction: column;
-            /* Chuyển thành dạng dọc */
             gap: 12px;
             color: #fff;
         }
@@ -393,12 +384,13 @@
         .music-controls-wrapper {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            flex-wrap: wrap; /* Tránh bị tràn khi màn hình hẹp */
         }
 
         .main-controls {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             font-size: 1rem;
             cursor: pointer;
         }
@@ -408,6 +400,7 @@
             align-items: center;
             gap: 8px;
             flex: 1;
+            min-width: 180px; /* Đảm bảo thanh thời gian không bị co quá nhỏ gây mất chữ */
             font-size: 0.75rem;
             font-family: monospace;
         }
@@ -425,24 +418,15 @@
             color: #a0a0a0;
         }
 
-        .music-controls {
-            display: flex;
-            gap: 15px;
-            margin: 10px 0;
-            font-size: 1.2rem;
-        }
-
         #progress-bar {
             margin: 5px 0;
-            accent-color: #00a8fc;
+            accent-color: rgba(47, 77, 73, 0.856);
         }
 
         body {
-            /* Thay 'pointer' bằng kiểu bạn muốn: auto, crosshair, wait, help... */
             cursor: default;
         }
 
-        /* Khi di chuột vào các phần tử có thể tương tác */
         a,
         button,
         .conn-icon,
@@ -456,61 +440,92 @@
         .volume-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             color: #a0a0a0;
         }
 
         #volume-slider {
-            width: 50px;
-            /* Độ dài thanh trượt */
+            width: 45px;
             height: 4px;
             cursor: pointer;
-            accent-color: #00a8fc;
+            accent-color: rgba(47, 77, 73, 0.856);
         }
+
         /* Responsive cho điện thoại (Màn hình nhỏ hơn 768px) */
-@media (max-width: 768px) {
-    body {
-        /* Cho phép cuộn dọc trên điện thoại */
-        overflow-y: auto !important;
-        /* Bỏ căn giữa theo chiều dọc nếu trang quá dài */
-        align-items: flex-start;
-    }
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto !important;
+                align-items: flex-start;
+            }
 
-    .container {
-        flex-direction: column;
-        padding: 10px;
-        /* Cho phép container giãn ra theo nội dung */
-        height: auto; 
-    }
+            .container {
+                flex-direction: column;
+                padding: 10px;
+                height: auto; 
+            }
 
-    .left-col, .right-col {
-        width: 100%;
-        flex: none;
-    }
-    /* Sắp xếp lại widget nhạc */
-    .music-widget {
-        padding: 10px;
-    }
+            .left-col, .right-col {
+                width: 100%;
+                flex: none;
+            }
+            
+            .music-widget {
+                padding: 12px;
+            }
 
-    .music-controls-wrapper {
-        flex-direction: column; /* Đưa các nút điều khiển xếp dọc */
-        gap: 10px;
-    }
+            .music-controls-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
 
-    .progress-container {
-        width: 100%; /* Cho thanh tiến trình chiếm trọn chiều ngang */
-        margin-top: 5px;
-    }
+            .progress-container {
+                width: 100%; 
+                margin-top: 2px;
+            }
 
-    .volume-container {
-        width: 100%;
-        justify-content: center; /* Đưa thanh âm lượng vào giữa */
-    }
+            .volume-container {
+                width: 100%;
+                justify-content: space-between; 
+            }
 
-    #volume-slider {
-        width: 100px; /* Tăng chiều rộng thanh âm lượng để dễ kéo hơn */
-    }
-}
+            #volume-slider {
+                flex: 1;
+                width: auto;
+            }
+        }
+        /* ================= BỘ ĐẾM VIEW GÓC DƯỚI TRÁI ================= */
+        .view-counter-wrapper {
+            position: fixed; /* Ghim cố định trên màn hình */
+            bottom: 20px;    /* Cách cạnh dưới 20px */
+            left: 20px;      /* Cách cạnh trái 20px */
+            z-index: 50;     /* Đảm bảo luôn nổi lên trên cùng */
+        }
+
+        .view-counter-small {
+            padding: 8px 16px; /* Bo gọn lại một chút cho đẹp */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .vc-title {
+            font-size: 0.75rem; /* Thu nhỏ chữ tiêu đề một chút */
+            font-weight: 700;
+            color: #b5bac1; /* Đổi màu chữ cho giống phần About Me */
+            text-transform: uppercase;
+        }
+
+        .vc-stats {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1.1rem;
+            color: #dbdee1;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -527,9 +542,9 @@
         Click anywhere to enter
     </div>
 
-    <video class="video-bg" autoplay loop muted playsinline>
-        <source src="./assets/background.webm" type="video/webm">
-    </video>
+    <video class="video-bg" autoplay loop muted playsinline disablePictureInPicture>
+    <source src="./assets/background.webm" type="video/webm">
+</video>
 
     <div class="container">
 
@@ -538,9 +553,9 @@
 
             <!-- THÊM THẺ VIDEO MP4 LÀM BANNER Ở ĐÂY -->
             <div class="banner">
-                <video class="banner-video" autoplay loop muted playsinline>
-                    <source src="./assets/banner.mp4" type="video/mp4">
-                </video>
+                <video class="banner-video" autoplay loop muted playsinline disablePictureInPicture>
+    <source src="./assets/banner.mp4" type="video/mp4">
+</video>
             </div>
 
             <div class="card-body">
@@ -691,7 +706,15 @@
             </div>
         </div>
     </div>
-
+<div class="view-counter-wrapper">
+        <div class="glass-card view-counter-small">
+            <div class="vc-title">Views</div>
+            <div class="vc-stats">
+                <i class="fa-solid fa-eye"></i>
+                <span id="view-count"><i class="fa-solid fa-spinner fa-spin"></i></span>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             /* 1. LOGIC ĐỒNG HỒ */
@@ -755,7 +778,7 @@
                 { title: "Crash Adams - New Heart", file: "./assets/music/Crash Adams - New Heart (Official Lyric Video).mp3" },
                 { title: "SƠN TÙNG M-TP | MUỘN RỒI MÀ SAO CÒN", file: "./assets/music/SƠN TÙNG M-TP - MUỘN RỒI MÀ SAO CÒN - OFFICIAL MUSIC VIDEO.mp3" },
                 { title: "Low G | In Love (ft. JustaTee)", file: "./assets/music/Low G - In Love (ft. JustaTee) - L2K The Album.mp3" },
-                { title: "SON TUNG M-TP | MAKING MY WAY", file: "./assets/music/SON TUNG M-TP - MAKING MY WAY - OFFICIAL VISUALIZER.mp3" },
+                { title: "SON TUNG M-TP | MAKING MY WAY", file: "./assets/music/SON TUNG M-TP - MAKING MY WAY - OFFICIAL VISUALIZER.mp3"},
                 { title: "Từng Ngày Yêu Em / buitruonglinh", file: "./assets/music/Từng Ngày Yêu Em - buitruonglinh.mp3" },
                 { title: "SON TUNG M-TP x TYGA | COME MY WAY", file: "./assets/music/SON TUNG M-TP x TYGA - COME MY WAY - OFFICIAL MUSIC VIDEO.mp3" },
                 { title: "VSTRA - Ai Ngoài Anh", file: "./assets/music/VSTRA - Ai Ngoài Anh (Official Audio).mp3" },
@@ -816,6 +839,59 @@
                 durationEl.innerText = `${durMin}:${durSec}`;
             });
         });
+        /* =======================================================
+               5. HIỆU ỨNG 3D: SỨC NẶNG CON TRỎ CHUỘT
+            ======================================================== */
+            const cards = document.querySelectorAll('.glass-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    // Lấy kích thước và vị trí của widget
+                    const rect = card.getBoundingClientRect();
+                    
+                    // Tính toán tọa độ chuột so với tâm của widget
+                    const x = e.clientX - rect.left; 
+                    const y = e.clientY - rect.top;  
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    // Tính toán góc nghiêng (chia cho 15 để giảm độ gắt của góc)
+                    // Chuột ở bên nào thì bên đó sẽ bị đẩy lùi về sau
+                    const rotateX = -((y - centerY) / 30);
+                    const rotateY = (x - centerX) / 30;
+
+                    // Áp dụng góc nghiêng và thu nhỏ nhẹ (lún xuống)
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(0.98)`;
+                    // Xóa delay transition để widget bám sát chuột mượt mà hơn
+                    card.style.transition = 'transform 0.1s linear, box-shadow 0.4s ease, border 0.4s ease';
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    // Khi đưa chuột ra ngoài, widget nảy lại vị trí ban đầu
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                    // Trả lại hiệu ứng transition chậm để tạo độ nảy mượt
+                    card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border 0.4s ease';
+                });
+            });
+            /* =======================================================
+               6. LOGIC BỘ ĐẾM VIEW (Mỗi lần load là +1)
+            ======================================================== */
+            async function initViewCounter() {
+                const counterEl = document.getElementById('view-count');
+                try {
+                    // /up ở cuối URL có nghĩa là: Gọi API này thì tự động +1 view
+                    const response = await fetch('https://api.counterapi.dev/v1/shanksystem_profile/total_visits/up'); 
+                    const data = await response.json();
+                    
+                    if(data.count !== undefined) {
+                        counterEl.innerText = Number(data.count).toLocaleString('en-US');
+                    }
+                } catch (error) {
+                    console.error("Lỗi lấy dữ liệu đếm view:", error);
+                    counterEl.innerText = "N/A";
+                }
+            }
+            initViewCounter();
     </script>
 </body>
 
