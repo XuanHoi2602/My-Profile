@@ -31,6 +31,7 @@
         }
 
         /* --- VIDEO NỀN TỔNG QUÁT --- */
+        /* Sửa lại CSS của video-bg hiện tại */
         .video-bg {
             position: absolute;
             top: 0;
@@ -40,6 +41,16 @@
             object-fit: cover;
             z-index: -1;
             pointer-events: none; 
+            /* Thêm hiệu ứng chuyển động mượt mà cho blur và mờ dần (1 giây) */
+            transition: filter 1s ease-in-out, opacity 1s ease-in-out;
+            filter: blur(0px); /* Mặc định nét */
+            opacity: 1;
+        }
+
+        /* Thêm class này: Khi đổi video, JS sẽ áp dụng class này để làm nhòe và tối nền */
+        .video-bg.blur-transition {
+            filter: blur(25px); /* Hiệu ứng Gaussian Blur cực mạnh */
+            opacity: 0.3; /* Tối đi một chút để chuyển cảnh không bị gắt */
         }
 
         /* ================= BỐ CỤC CHÍNH ================= */
@@ -57,8 +68,8 @@
         /* Nền trong suốt thủy tinh và hiệu ứng ngả về sau khi hover viền */
         .glass-card {
             background: rgba(15, 17, 21, 0.35); /* Tăng độ trong suốt dạng thủy tinh */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -300,12 +311,12 @@
 
         .skills-marquee-widget::before {
             left: 0;
-            background: linear-gradient(to right, rgba(15, 17, 21, 0.6), transparent);
+            background: linear-gradient(to right, rgba(15, 17, 21, 0.2), transparent);
         }
 
         .skills-marquee-widget::after {
             right: 0;
-            background: linear-gradient(to left, rgba(15, 17, 21, 0.6), transparent);
+            background: linear-gradient(to left, rgba(15, 17, 21, 0.2), transparent);
         }
 
         .marquee-track {
@@ -542,9 +553,9 @@
         Click anywhere to enter
     </div>
 
-    <video class="video-bg" autoplay loop muted playsinline disablePictureInPicture>
-    <source src="./assets/background.webm" type="video/webm">
-</video>
+    <video id="bg-video-player" class="video-bg" autoplay muted playsinline disablePictureInPicture>
+        <source src="./assets/background.webm" type="video/webm">
+    </video>
 
     <div class="container">
 
@@ -892,6 +903,45 @@
                 }
             }
             initViewCounter();
+            /* =======================================================
+               7. LOGIC NỀN RANDOM & CHUYỂN CẢNH GAUSSIAN BLUR
+            ======================================================== */
+            const bgVideoEl = document.getElementById("bg-video-player");
+
+            // Danh sách các video nền của bạn (Hãy thêm/sửa tên file thực tế bạn có vào đây)
+            const bgPlaylist = [
+                "./assets/background.webm",
+                "./assets/background1.webm",
+                "./assets/background2.mp4"
+            ];
+
+            // Chọn ngẫu nhiên 1 video khi vừa load trang
+            let currentBgIndex = Math.floor(Math.random() * bgPlaylist.length);
+
+            // Gán source bắt đầu cho video
+            bgVideoEl.src = bgPlaylist[currentBgIndex];
+
+            // Hàm tải video nền tiếp theo với hiệu ứng
+            function loadNextBackground(index) {
+                // 1. Kích hoạt hiệu ứng Gaussian Blur
+                bgVideoEl.classList.add("blur-transition");
+
+                // 2. Đợi 1 giây cho nhòe hẳn, rồi mới đổi video và phát
+                setTimeout(() => {
+                    bgVideoEl.src = bgPlaylist[index];
+                    bgVideoEl.play();
+
+                    // 3. Xóa hiệu ứng Blur để video mới từ từ rõ nét trở lại
+                    bgVideoEl.classList.remove("blur-transition");
+                }, 1000); 
+            }
+
+            // Bắt sự kiện khi video hiện tại chạy HẾT (ended)
+            bgVideoEl.addEventListener("ended", () => {
+                // Tăng thứ tự lên 1, nếu hết danh sách thì quay lại video đầu (số 0)
+                currentBgIndex = (currentBgIndex + 1) % bgPlaylist.length;
+                loadNextBackground(currentBgIndex);
+            });
     </script>
 </body>
 
