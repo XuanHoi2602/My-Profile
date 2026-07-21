@@ -786,7 +786,7 @@
                 { title: "Dạo Bước HongKong1999", file: "./assets/music/Dạo Bước HongKong1999 (Lời Việt Sát Nghĩa) 漫步香港1999 I NHONHO mơi nhạc.mp3" },
                 { title: "Và Thế Giới Đã Mất Đi Một Người Cô Đơn", file: "./assets/music/Và Thế Giới Đã Mất Đi Một Người Cô Đơn.mp3" }
             ];
-            let currentSongIndex = 0;
+            let currentSongIndex = Math.floor(Math.random() * playlist.length);
 
             window.loadSong = function (index) {
                 audio.src = playlist[index].file;
