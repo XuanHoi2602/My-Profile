@@ -505,38 +505,6 @@
                 width: auto;
             }
         }
-        /* ================= BỘ ĐẾM VIEW GÓC DƯỚI TRÁI ================= */
-        .view-counter-wrapper {
-            position: fixed; /* Ghim cố định trên màn hình */
-            bottom: 20px;    /* Cách cạnh dưới 20px */
-            left: 20px;      /* Cách cạnh trái 20px */
-            z-index: 50;     /* Đảm bảo luôn nổi lên trên cùng */
-        }
-
-        .view-counter-small {
-            padding: 8px 16px; /* Bo gọn lại một chút cho đẹp */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .vc-title {
-            font-size: 0.75rem; /* Thu nhỏ chữ tiêu đề một chút */
-            font-weight: 700;
-            color: #b5bac1; /* Đổi màu chữ cho giống phần About Me */
-            text-transform: uppercase;
-        }
-
-        .vc-stats {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 1.1rem;
-            color: #dbdee1;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            font-weight: bold;
-        }
     </style>
 </head>
 
@@ -717,15 +685,6 @@
             </div>
         </div>
     </div>
-<div class="view-counter-wrapper">
-        <div class="glass-card view-counter-small">
-            <div class="vc-title">Views</div>
-            <div class="vc-stats">
-                <i class="fa-solid fa-eye"></i>
-                <span id="view-count"><i class="fa-solid fa-spinner fa-spin"></i></span>
-            </div>
-        </div>
-    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             /* 1. LOGIC ĐỒNG HỒ */
@@ -884,24 +843,6 @@
                     card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border 0.4s ease';
                 });
             });
-            /* =======================================================
-               6. LOGIC BỘ ĐẾM VIEW (Mỗi lần load là +1)
-            ======================================================== */
-            async function initViewCounter() {
-                const counterEl = document.getElementById('view-count');
-                try {
-                    // /up ở cuối URL có nghĩa là: Gọi API này thì tự động +1 view
-                    const response = await fetch('https://api.counterapi.dev/v1/shanksystem_profile/total_visits/up'); 
-                    const data = await response.json();
-                    
-                    if(data.count !== undefined) {
-                        counterEl.innerText = Number(data.count).toLocaleString('en-US');
-                    }
-                } catch (error) {
-                    console.error("Lỗi lấy dữ liệu đếm view:", error);
-                    counterEl.innerText = "N/A";
-                }
-            }
             initViewCounter();
             /* =======================================================
                7. LOGIC NỀN RANDOM & CHUYỂN CẢNH GAUSSIAN BLUR
